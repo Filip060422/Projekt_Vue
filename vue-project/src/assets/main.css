@@ -13,8 +13,22 @@ body {
   padding-left: 303px;
   padding-right: 286px;
 }
-
 button {
   border: none;
   background: none;
+}
+.none {
+  display: none;
+}
+.basic-border {
+  border: 2px solid #EAEAEA;
+}
+.border-answer-color {
+  color: #543E3C;
+}
+.active-border {
+  border: 3px solid #E1B9B5;
+}
+.hidden {
+  visibility: hidden;
 }

@@ -4,11 +4,12 @@ import ButtonComponent from './components/ButtonComponent.vue'
 import CardComponent from './components/CardComponent.vue'
 import BoxComponent from './components/BoxComponent.vue'
 import FooterComponent from './components/FooterComponent.vue'
+import QuestionModalComponent from './components/QuestionModalComponent.vue'
 
 </script>
 
 <template>
-    <div class="container">
+    <div class="container none">
         <div class="first-page">
             <HeaderComponent />
             <div class="main-area">
@@ -46,6 +47,14 @@ import FooterComponent from './components/FooterComponent.vue'
             <ButtonComponent />
         </div>
         <FooterComponent />
+    </div>
+    <div class="container-modal padding">
+        <div class="logo">
+            <img src="/icons/logo.svg" alt="Logo">
+        </div>
+        <form action="" method="post" id="survey-form">
+            <QuestionModalComponent />
+        </form>
     </div>
 </template>
 
@@ -135,5 +144,14 @@ import FooterComponent from './components/FooterComponent.vue'
     div.third-page div.boxes {
         display: flex;
         justify-content: space-between;
+    }
+
+    /* Modal */
+    div.container-modal {
+        height: 100vh;
+        width: 100%;
+        padding-top: 40px;
+        background-color: rgba(0,0,0,0.4);
+        position: relative;
     }
 </style>
