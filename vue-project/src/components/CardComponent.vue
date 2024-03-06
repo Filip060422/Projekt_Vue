@@ -1,23 +1,5 @@
 <script setup>
-import { ref } from 'vue';
-
-const cards = ref([
-    {
-        image: './icons/prize-one.png',
-        title: 'Kubek termiczny',
-        description: 'kapuczina lub herbatka przetrwa w ciepełku wiele godzin'
-    },
-    {
-        image: './icons/prize-two.png',
-        title: 'Zestaw papierniczy',
-        description: 'gdy zabraknie długopisów czy zeszytu na szybkie notatki'
-    },
-    {
-        image: './icons/prize-three.png',
-        title: 'Zapas słodyczy',
-        description: 'na ciężkie czasy, kiedy cukier drastycznie spada'
-    }
-]);
+const { cards } = defineProps(['cards']);
 </script>
 <template>
     <div class="card" v-for="{image, title, description} in cards">
