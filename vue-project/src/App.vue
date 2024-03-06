@@ -14,6 +14,71 @@ const toggleContainers = () => {
   isVisible.value = !isVisible.value;
 };
 
+const cards = ref([
+    {
+        image: './icons/prize-one.png',
+        title: 'Kubek termiczny',
+        description: 'kapuczina lub herbatka przetrwa w ciepełku wiele godzin'
+    },
+    {
+        image: './icons/prize-two.png',
+        title: 'Zestaw papierniczy',
+        description: 'gdy zabraknie długopisów czy zeszytu na szybkie notatki'
+    },
+    {
+        image: './icons/prize-three.png',
+        title: 'Zapas słodyczy',
+        description: 'na ciężkie czasy, kiedy cukier drastycznie spada'
+    }
+]);
+
+const boxes = ref([
+    {
+        image: './icons/step-one-icon.png',
+        title: 'Wypełnij mini quiz o firmie'
+    },
+    {
+        image: './icons/step-two-icon.png',
+        title: 'Zostaw nam namiary do siebie!'
+    },
+    {
+        image: './icons/step-three-icon.png',
+        title: 'Wylosujemy 10 szczęśliwców',
+    }
+]);
+
+const modals = ref([
+        {
+            question: 'W którym roku powstal Mediaflex?',
+            answerA: '2007',
+            answerB: '2008',
+            answerC: '2009',
+            status: 'active',
+            correctAnswer: 'C',
+            selectedAnswer: null,
+            showAlert: false
+        },
+        {
+            question: 'Firmową wartością nie jest:',
+            answerA: 'Jakość',
+            answerB: 'Rozsądek',
+            answerC: 'Komunikacja',
+            status: 'answered',
+            correctAnswer: 'B',
+            selectedAnswer: null,
+            showAlert: false
+        },
+        {
+            question: 'Biuro Mediaflex znajduje się w:',
+            answerA: 'Krakowie',
+            answerB: 'Szczecinie',
+            answerC: 'Rzeszowie',
+            status: 'answered',
+            correctAnswer: 'A',
+            selectedAnswer: null,
+            showAlert: false
+        }
+    ]);
 </script>
 
 <template>
@@ -41,7 +106,7 @@ const toggleContainers = () => {
         <div class="second-page padding">
             <h2 id="awards">Co możesz wygrać?</h2>
             <div class="cards">
-                <CardComponent />
+                <CardComponent :cards="cards" />
             </div>
             <ButtonComponent :toggleContainers="toggleContainers"/>
             <p><a href="#">Regulamin konkursu</a></p>
@@ -50,7 +115,7 @@ const toggleContainers = () => {
         <div class="third-page padding">
             <h2 id="steps">Do Nagrody Dzielą Cię 3 Kroki!</h2>
             <div class="boxes">
-                 <BoxComponent />
+                 <BoxComponent :boxes="boxes" />
             </div>
             <ButtonComponent :toggleContainers="toggleContainers"/>
         </div>
@@ -61,7 +126,7 @@ const toggleContainers = () => {
             <img src="/icons/logo.svg" alt="Logo">
         </div>
         <form action="" method="post" id="survey-form">
-            <QuestionModalComponent />
+            <QuestionModalComponent :modals="modals"/>
         </form>
     </div>
 </template>
@@ -75,9 +140,9 @@ const toggleContainers = () => {
         background: #FBF9F5 0% 0% no-repeat padding-box;
     }
     section.banner {
-    display: inline-flex;
-    align-items: center;
-    padding-top: 73px;
+        display: inline-flex;
+        align-items: center;
+        padding-top: 73px;
     }
     section div.left h2 {
         color: #2D645A;

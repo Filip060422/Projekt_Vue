@@ -1,71 +1,80 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
+import ScoreModalComponent from './ScoreModalComponent.vue'
+import InputComponent from './InputComponent.vue'
+import NpsSurveyComponent from './NpsSurveyComponent.vue'
+const { modals, checkboxes } = defineProps(['modals', 'checkboxes']);
 
-const modals = ref([
-        {
-            question: 'W którym roku powstal Mediaflex?',
-            answerA: '2007',
-            answerB: '2008',
-            answerC: '2009',
-            status: 'one',
-            selectedAnswer: null
-        },
-        {
-            question: 'Firmową wartością nie jest:',
-            answerA: 'Jakość',
-            answerB: 'Rozsądek',
-            answerC: 'Komunikacja',
-            status: 'two',
-            selectedAnswer: null
-        },
-        {
-            question: 'Biuro Mediaflex znajduje się w:',
-            answerA: 'Krakowie',
-            answerB: 'Szczecinie',
-            answerC: 'Rzeszowie',
-            status: 'three',
-            selectedAnswer: null
-        }
-    ]);
+const score = ref(0);
+
     const selectAnswer = (answer, modal) => {
         modal.selectedAnswer = answer;
     };
 
+    const goToNextQuestion = (modalIndex) => {
+    const modal = modals[modalIndex];
+    if (modal.selectedAnswer) {
+        if (modalIndex < modals.length - 1) {
+            modal.status = 'answered';
+            modals[modalIndex + 1].status = 'active';
+        }
+    } else {
+        modal.showAlert = true;
+    }
+};
+    const goToPreviousQuestion = (modalIndex) => {
+        if (modalIndex > 0) {
+            modals[modalIndex].status = 'answered';
+            modals[modalIndex - 1].status = 'active';
+            modals[modalIndex -1].showAlert = false;
+        }
+    };
+
+    const isVisible = ref(false);
+    const goToNextModal = (modalIndex) => {
+        
+        if (modals[modalIndex].selectedAnswer) {
+            if(modalIndex === 2) {
+                modals[modalIndex].status = 'answered';
+                isVisible.value = !isVisible.value
+                modals.forEach(modal => {
+                    if (modal.selectedAnswer === modal.correctAnswer) {
+                        score.value++;
+                    }
+                });
+            }
+        } else {
+            modals[modalIndex].showAlert = true;
+        }
+    }
+
 </script>
 <template>
-    <div class="modal-content " v-for="(modal, index) in modals" :key="index">
+    <div class="modal-content " v-for="(modal, index) in modals" :key="index" v-show="modal.status === 'active'">
         <div class="first-question">
             <h2>Wiosna nadchodzi - konkurs Mediaflex</h2>
             <h3>Pytanie {{ index + 1 }}/3</h3>
             <h4>{{ modal.question }}</h4>    
                 <div class="answers">
-                    <div class="answer">
-                     <img class="image_answer"  :src="modal.selectedAnswer === 'A' ? '/icons/flower-icon-color.svg' : '/icons/flower-icon.svg'" alt="Flower Icon" >
-                     <p>A</p>
-                     <input class="border-two input-color basic-border" type="button" :value="modal.answerA" :class="{ 'active-border': modal.selectedAnswer === 'A' }" @click="selectAnswer('A', modal)">
+                    <div class="answer" v-for="(answer, answerIndex) in ['A', 'B', 'C']" :key="answerIndex">
+                     <img class="image_answer"  :src="modal.selectedAnswer === answer ? '/icons/flower-icon-color.svg' : '/icons/flower-icon.svg'" alt="Flower Icon" >
+                     <p>{{ answer }}</p>
+                     <input class="border-two input-color basic-border" type="button" :value="modal['answer' + answer]" :class="{ 'active-border': modal.selectedAnswer === answer }" @click="selectAnswer(answer, modal)">
                  </div>
-                 <div class="answer">
-                     <img class="image_answer"  :src="modal.selectedAnswer === 'B' ? '/icons/flower-icon-color.svg' : '/icons/flower-icon.svg'" alt="Flower Icon">
-                     <p>B</p>
-                     <input class="border-two input-color basic-border" type="button" :value="modal.answerB" :class="{ 'active-border': modal.selectedAnswer === 'B' }" @click="selectAnswer('B', modal)">
-                 </div>
-                 <div class="answer">
-                     <img class="image_answer"  :src="modal.selectedAnswer === 'C' ? '/icons/flower-icon-color.svg' : '/icons/flower-icon.svg'" alt="Flower Icon">
-                     <p>C</p>
-                     <input class="border-two input-color basic-border" type="button" :value="modal.answerC" :class="{ 'active-border': modal.selectedAnswer === 'C' }" @click="selectAnswer('C', modal)">
-                 </div>
+                
             </div>
                 </div>
                 <div class="bottom">
-                    <button type="button" class="last-question" :class="{'hidden': modal.status == 'one'}"><img src="/icons/back-icon.svg" alt=""> <p>POPRZEDNIE PYTANIE</p></button>
-                    <p class="alert alert-one hidden">Prosimy o zaznaczenie odpowiedzi!</p>
+                    <button type="button" class="last-question" @click="goToPreviousQuestion(index)" :class="{'hidden': index == 0}"><img src="/icons/back-icon.svg" alt=""> <p>POPRZEDNIE PYTANIE</p></button>
+                    <p class="alert" v-show="modal.showAlert">Prosimy zaznaczyć odpowiedź</p>
                     <div class="button">
-                        <button type="submit" v-if="modal.status == 'three'">ZAKOŃCZ QUIZ</button>
-                        <button type="button" v-else class="submit submit-one"><p>NASTĘPNE PYTANIE</p> <img src="/icons/next-icon.svg" alt=""></button>
+                        <InputComponent  @click="goToNextModal(index)" v-if="index == 2"/>
+                        <button type="button" @click="goToNextQuestion(index)" v-else class="submit submit-one"><p>NASTĘPNE PYTANIE</p> <img src="/icons/next-icon.svg" alt=""></button>
                     </div>
                 </div>
-            </div>
-        
+        </div>
+        <ScoreModalComponent v-show="isVisible" :score="score"/>
+        <!-- <NpsSurveyComponent /> -->
 </template>
 
 <style scoped>
@@ -75,6 +84,7 @@ const modals = ref([
     div.bottom {
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
     div.modal-content {
         width: 1088px;
@@ -86,6 +96,7 @@ const modals = ref([
         top: 180px;
         left: 416px;
         padding: 40px 40px 40px 35px;
+        display: block;
     }
     div.modal-content h2 {
         color: #2D635A;
