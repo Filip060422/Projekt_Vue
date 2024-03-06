@@ -1,5 +1,8 @@
+<script setup>
+const { toggleContainers } = defineProps(['toggleContainers']);
+</script>
 <template>
-    <input type="button" value="Biorę udział" class="to-survey">
+    <input @click="toggleContainers" type="button" value="Biorę udział" class="to-survey">
 </template>
 
 <style scoped>

@@ -6,10 +6,18 @@ import BoxComponent from './components/BoxComponent.vue'
 import FooterComponent from './components/FooterComponent.vue'
 import QuestionModalComponent from './components/QuestionModalComponent.vue'
 
+import { ref } from 'vue';
+
+const isVisible = ref(true);
+
+const toggleContainers = () => {
+  isVisible.value = !isVisible.value;
+};
+
 </script>
 
 <template>
-    <div class="container none">
+    <div class="container " v-show="isVisible">
         <div class="first-page">
             <HeaderComponent />
             <div class="main-area">
@@ -18,7 +26,7 @@ import QuestionModalComponent from './components/QuestionModalComponent.vue'
                         <h2>Wiosna nadchodzi - zgarnij wiosenne gadżety od Mediaflex!</h2>
                         <div class="line"></div>
                         <p>Do wiosny jeden krok... weź udział w konkursie i wygraj gadżety, które z pewnością umilą coraz cieplejsze wiosenne popołudnia.</p>
-                        <ButtonComponent />
+                        <ButtonComponent :toggleContainers="toggleContainers"/>
                     </div>
                     <div class="right">
                         <img src="/icons/flowers.svg" alt="flowers">
@@ -35,7 +43,7 @@ import QuestionModalComponent from './components/QuestionModalComponent.vue'
             <div class="cards">
                 <CardComponent />
             </div>
-            <ButtonComponent />
+            <ButtonComponent :toggleContainers="toggleContainers"/>
             <p><a href="#">Regulamin konkursu</a></p>
         </div>
 
@@ -44,11 +52,11 @@ import QuestionModalComponent from './components/QuestionModalComponent.vue'
             <div class="boxes">
                  <BoxComponent />
             </div>
-            <ButtonComponent />
+            <ButtonComponent :toggleContainers="toggleContainers"/>
         </div>
         <FooterComponent />
     </div>
-    <div class="container-modal padding">
+    <div class="container-modal padding " v-show="!isVisible">
         <div class="logo">
             <img src="/icons/logo.svg" alt="Logo">
         </div>
