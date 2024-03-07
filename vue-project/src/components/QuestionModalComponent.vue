@@ -3,12 +3,14 @@ import { ref } from 'vue'
 import ScoreModalComponent from './ScoreModalComponent.vue'
 import InputComponent from './InputComponent.vue'
 import NpsSurveyComponent from './NpsSurveyComponent.vue'
+
 const { modals, checkboxes } = defineProps(['modals', 'checkboxes']);
 
 const score = ref(0);
 
     const selectAnswer = (answer, modal) => {
         modal.selectedAnswer = answer;
+
     };
 
     const goToNextQuestion = (modalIndex) => {
@@ -48,33 +50,40 @@ const score = ref(0);
         }
     }
 
+    const NpsInvisible = ref(true);
+    const toggleWindow = () => {
+        NpsInvisible.value = !NpsInvisible.value;
+    };
+
 </script>
 <template>
-    <div class="modal-content " v-for="(modal, index) in modals" :key="index" v-show="modal.status === 'active'">
-        <div class="first-question">
-            <h2>Wiosna nadchodzi - konkurs Mediaflex</h2>
-            <h3>Pytanie {{ index + 1 }}/3</h3>
-            <h4>{{ modal.question }}</h4>    
-                <div class="answers">
-                    <div class="answer" v-for="(answer, answerIndex) in ['A', 'B', 'C']" :key="answerIndex">
-                     <img class="image_answer"  :src="modal.selectedAnswer === answer ? '/icons/flower-icon-color.svg' : '/icons/flower-icon.svg'" alt="Flower Icon" >
-                     <p>{{ answer }}</p>
-                     <input class="border-two input-color basic-border" type="button" :value="modal['answer' + answer]" :class="{ 'active-border': modal.selectedAnswer === answer }" @click="selectAnswer(answer, modal)">
-                 </div>
-                
-            </div>
-                </div>
-                <div class="bottom">
-                    <button type="button" class="last-question" @click="goToPreviousQuestion(index)" :class="{'hidden': index == 0}"><img src="/icons/back-icon.svg" alt=""> <p>POPRZEDNIE PYTANIE</p></button>
-                    <p class="alert" v-show="modal.showAlert">Prosimy zaznaczyć odpowiedź</p>
-                    <div class="button">
-                        <InputComponent  @click="goToNextModal(index)" v-if="index == 2"/>
-                        <button type="button" @click="goToNextQuestion(index)" v-else class="submit submit-one"><p>NASTĘPNE PYTANIE</p> <img src="/icons/next-icon.svg" alt=""></button>
+    <form action="" method="post" id="survey-form" v-show="NpsInvisible">
+        <div class="modal-content " v-for="(modal, index) in modals" :key="index" v-show="modal.status === 'active'">
+            <div class="first-question">
+                <h2>Wiosna nadchodzi - konkurs Mediaflex</h2>
+                <h3>Pytanie {{ index + 1 }}/3</h3>
+                <h4>{{ modal.question }}</h4>    
+                    <div class="answers">
+                        <div class="answer" v-for="(answer, answerIndex) in ['A', 'B', 'C']" :key="answerIndex">
+                        <img class="image_answer"  :src="modal.selectedAnswer === answer ? '/icons/flower-icon-color.svg' : '/icons/flower-icon.svg'" alt="Flower Icon" >
+                        <p>{{ answer }}</p>
+                        <input class="border-two input-color basic-border" type="button" :value="modal['answer' + answer]" :class="{ 'active-border': modal.selectedAnswer === answer }" @click="selectAnswer(answer, modal)">
                     </div>
+                    
                 </div>
-        </div>
-        <ScoreModalComponent v-show="isVisible" :score="score"/>
-        <!-- <NpsSurveyComponent /> -->
+                    </div>
+                    <div class="bottom">
+                        <button type="button" class="last-question" @click="goToPreviousQuestion(index)" :class="{'hidden': index == 0}"><img src="/icons/back-icon.svg" alt=""> <p>POPRZEDNIE PYTANIE</p></button>
+                        <p class="alert" v-show="modal.showAlert">Prosimy zaznaczyć odpowiedź</p>
+                        <div class="button">
+                            <InputComponent  @click.prevent="goToNextModal(index)" v-if="index == 2"/>
+                            <button type="button" @click="goToNextQuestion(index)" v-else class="submit submit-one"><p>NASTĘPNE PYTANIE</p> <img src="/icons/next-icon.svg" alt=""></button>
+                        </div>
+                    </div>
+            </div>
+            <ScoreModalComponent v-show="isVisible" :score="score" :NpsInvisible="NpsInvisible" :toggleWindow="toggleWindow"/>
+        </form>
+        <NpsSurveyComponent v-show="!NpsInvisible"/>
 </template>
 
 <style scoped>

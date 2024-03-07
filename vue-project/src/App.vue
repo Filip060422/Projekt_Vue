@@ -125,9 +125,7 @@ const modals = ref([
         <div class="logo">
             <img src="/icons/logo.svg" alt="Logo">
         </div>
-        <form action="" method="post" id="survey-form">
-            <QuestionModalComponent :modals="modals"/>
-        </form>
+        <QuestionModalComponent :modals="modals"/>
     </div>
 </template>
 

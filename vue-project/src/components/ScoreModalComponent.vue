@@ -1,12 +1,15 @@
 <script setup>
 import InputComponent from './InputComponent.vue'
 import { ref, watchEffect } from 'vue'
-const { score } = defineProps(['score']);
+const { score, NpsInvisible, toggleWindow } = defineProps(['score', 'NpsInvisible', 'toggleWindow']);
 
 const checkedAll = ref(false);
 const rules = ref(false);
 const data = ref(false);
 const dataTwo = ref(false);
+
+const isChcecked = ref(false);
+const isAlert = ref(false);
 
 watchEffect(() => {
   if (checkedAll.value) {
@@ -22,6 +25,20 @@ watchEffect(() => {
 
 });
 
+watchEffect(() => {
+    if (rules.value == true  && dataTwo.value == true) {
+        isChcecked.value = !isChcecked.value;
+    } else if (checkedAll.value == false) {
+        isChcecked.value = false;
+    }
+});
+function handleClick(event) {
+    if (isChcecked.value) {
+        event.preventDefault();
+        toggleWindow();
+    }
+};
+
 const checkboxes = ref([
     {
          id: "all",
@@ -33,7 +50,7 @@ const checkboxes = ref([
          id: "rules",
          v: rules,
          required: true,
-         label: '* Akceptuję <a href="#">regulamin konkursu</a>'
+         label: '* Akceptuję <a href="#" style="color: #E1B9B5">regulamin konkursu</a>'
     },
     {
          id: 'data',
@@ -48,7 +65,6 @@ const checkboxes = ref([
          label: '* Wyrażam zgodę na przetwarzanie podanych przeze mnie moich danych osobowych w zakresie imię, nazwisko, adres e-mail, numer PWZ, numer telefonu przez Administratora w celu organizacji i realizacji Konkursu.'
     }
 ]);
-
 </script>
 <template>
     <div class="modal-content modal-content-score">
@@ -74,7 +90,7 @@ const checkboxes = ref([
                         <p>Klauzula informacyjna RODO <a href="#">czytaj więcej</a></p>
                         <p>* Pola obowiązkowe są oznaczone gwiazdką</p>
                         <div class="button">
-                            <InputComponent />
+                            <InputComponent class="end-button" @click="handleClick"/>
                         </div>
                     </div>
                 </div>
