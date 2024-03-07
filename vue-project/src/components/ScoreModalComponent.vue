@@ -26,9 +26,9 @@ watchEffect(() => {
 });
 
 watchEffect(() => {
-    if (rules.value == true  && dataTwo.value == true) {
+    if (rules.value  && dataTwo.value) {
         isChcecked.value = !isChcecked.value;
-    } else if (checkedAll.value == false) {
+    } else if (!checkedAll.value) {
         isChcecked.value = false;
     }
 });
@@ -85,7 +85,6 @@ const checkboxes = ref([
                                 <td><input type="checkbox" v-model="checkbox.v" :id="checkbox.id" class="check" :required="checkbox.required"></td>
                                 <td><label :for="checkbox.id" v-html="checkbox.label"></label></td>
                             </tr>
-
                         </table>
                         <p>Klauzula informacyjna RODO <a href="#">czytaj więcej</a></p>
                         <p>* Pola obowiązkowe są oznaczone gwiazdką</p>

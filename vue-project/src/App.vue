@@ -106,7 +106,7 @@ const modals = ref([
         <div class="second-page padding">
             <h2 id="awards">Co możesz wygrać?</h2>
             <div class="cards">
-                <CardComponent :cards="cards" />
+                <CardComponent :cards="cards"/>
             </div>
             <ButtonComponent :toggleContainers="toggleContainers"/>
             <p><a href="#">Regulamin konkursu</a></p>
